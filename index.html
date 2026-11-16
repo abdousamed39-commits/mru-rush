@@ -6,187 +6,68 @@
 <title>TAXI BMD - By Samuel Gims</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;-webkit-tap-highlight-color:transparent}
-body{background:#0a1a33;color:#fff;overflow:hidden;height:100vh;display:flex;flex-direction:column}
-.topbar{background:#FFD400;color:#111;padding:8px 12px;display:flex;justify-content:space-between;align-items:center}
-.topbar h1{font-size:18px;line-height:1}.topbar small{font-size:10px}
-.pill{background:#111;color:#FFD400;padding:5px 10px;border-radius:20px;font-weight:bold;font-size:13px}
-.pill.white{background:#fff;color:#111}
-#gameWrap{flex:1;position:relative;background:#2b2b2b;overflow:hidden;display:flex;justify-content:center}
+body{background:#0a1a33;color:#fff;overflow:hidden;height:100vh;height:100dvh;display:flex;flex-direction:column}
+.topbar{background:#FFD400;color:#111;padding:8px 12px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.topbar h1{font-size:18px;line-height:1}.topbar small{font-size:10px}.topbar>div:last-child{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end}
+.pill{background:#111;color:#FFD400;padding:5px 9px;border-radius:20px;font-weight:bold;font-size:12px;white-space:nowrap}.pill.white{background:#fff;color:#111}
+#gameWrap{flex:1;min-height:0;position:relative;background:#2b2b2b;overflow:hidden;display:flex;justify-content:center}
 canvas{background:#3a3a3a;display:block;max-width:100%;height:100%;touch-action:none}
-#hud{position:absolute;top:10px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:10}
-#startScreen{position:absolute;inset:0;background:rgba(0,0,0,.82);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;padding:20px;z-index:100}
-#startScreen h2{font-size:32px} #startScreen h2 span{color:#FFD400}
-.btn{padding:16px 30px;border:none;border-radius:12px;font-weight:bold;font-size:19px;cursor:pointer}
-.btn-play{background:#FFD400;color:#111}
-.btn-again{background:#25D366;color:#fff}
-.controls{position:absolute;bottom:12px;left:0;right:0;display:flex;justify-content:space-between;padding:0 14px;z-index:20;pointer-events:none}
-.controls button{pointer-events:auto;width:72px;height:72px;border-radius:50%;border:none;background:rgba(255,255,255,.95);font-size:30px;box-shadow:0 4px 10px rgba(0,0,0,.4)}
-.controls .mid{display:flex;gap:10px;align-items:flex-end}
-.controls .mid button{width:58px;height:58px;font-size:22px;background:#FFD400}
+#hud{position:absolute;top:10px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:10;white-space:nowrap}
+#startScreen{position:absolute;inset:0;background:rgba(0,0,0,.84);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;padding:20px;z-index:100}
+#startScreen h2{font-size:32px}#startScreen h2 span{color:#FFD400}
+.btn{padding:14px 25px;border:none;border-radius:12px;font-weight:bold;font-size:18px;cursor:pointer}.btn-play{background:#FFD400;color:#111}.btn-again{background:#25D366;color:#fff}
+.controls{position:absolute;bottom:12px;left:0;right:0;display:flex;justify-content:space-between;align-items:flex-end;padding:0 14px;z-index:20;pointer-events:none}
+.controls button{pointer-events:auto;border:0;cursor:pointer;touch-action:none;box-shadow:0 4px 10px rgba(0,0,0,.4)}
+.arrow{width:58px;height:58px;border-radius:50%;background:rgba(255,255,255,.95);font-size:25px}
+.controls .mid{display:flex;gap:8px;align-items:flex-end}.controls .mid button{width:48px;height:48px;border-radius:50%;font-size:20px;background:#FFD400}
+#steering{pointer-events:auto;width:88px;height:88px;border-radius:50%;border:8px solid #222;background:radial-gradient(circle,#666 0 12%,transparent 14%);position:relative;touch-action:none;box-shadow:0 3px 8px #0008;cursor:grab}
+#steering:before,#steering:after{content:'';position:absolute;background:#222;border-radius:5px}#steering:before{width:8px;height:62px;left:32px;top:4px}#steering:after{height:8px;width:62px;left:4px;top:32px}
+#steering span{position:absolute;z-index:1;left:25px;top:25px;width:22px;height:22px;border-radius:50%;background:#FFD400;border:3px solid #222}
+#horn{width:55px;height:55px;border-radius:50%;background:#e74c3c;color:white;font-size:23px;margin-left:6px}
+#driverTalk{position:absolute;bottom:106px;left:50%;transform:translateX(-50%);z-index:15;background:#fff;color:#111;border-radius:14px;padding:8px 12px;font-weight:bold;font-size:13px;max-width:85%;text-align:center;display:none;box-shadow:0 3px 10px #0008}
+@media(max-height:560px){.controls{bottom:5px}.arrow{width:48px;height:48px}#steering{width:70px;height:70px;border-width:7px}#steering:before{height:48px;left:24px;top:4px}#steering:after{width:48px;left:4px;top:24px}#steering span{left:19px;top:19px;width:18px;height:18px}#horn{width:46px;height:46px}#driverTalk{bottom:84px}}
 </style>
 </head>
 <body>
-<div class="topbar"><div><h1>🚕 TAXI BMD</h1><small>By Samuel Gims • Nouakchott</small></div><div style="display:flex;gap:6px"><span class="pill" id="score">💰 0 MRU</span><span class="pill white" id="fuel">⛽ 100%</span><span class="pill" id="lives">❤️❤️❤️</span></div></div>
+<div class="topbar"><div><h1>🚕 TAXI BMD</h1><small>By Samuel Gims • Nouakchott</small></div><div><span class="pill" id="score">💰 0 MRU</span><span class="pill white" id="fuel">⛽ 100%</span><span class="pill" id="lives">❤️❤️❤️</span><span class="pill white" id="passengers">👥 0</span></div></div>
 <div id="gameWrap">
 <canvas id="game" width="420" height="640"></canvas>
 <div id="hud"><span class="pill" id="route">BMD → BASRA</span><span class="pill white" id="dist">0m / 1000m</span></div>
-<div class="controls"><button id="btn-left">⬅️</button><div class="mid"><button id="btn-up">⬆️</button><button id="btn-down">⬇️</button></div><button id="btn-right">➡️</button></div>
-<div id="startScreen">
-<h2>🚕 TAXI <span>BMD</span></h2>
-<p style="font-size:14px;line-height:1.6">Tu es taximan à <b>Nouakchott</b>.<br>De <b>BMD</b> à <b>BASRA</b>, ramasse les clients 🧍<br>Évite les voitures 🚗, prends l'essence ⛽<br><br>👉 Doigt : glisse pour conduire<br>👉 Boutons : ⬅️ ➡️ pour changer de voie<br>⬆️ pour accélérer, ⬇️ pour freiner</p>
-<div style="background:#fff;color:#111;padding:6px 12px;border-radius:20px;font-size:13px" id="best">🏆 Record : 0 MRU</div>
-<button class="btn btn-play" id="btn-start">▶️ DÉMARRER LA COURSE</button>
-<p style="font-size:11px">Nouakchott • BMD → Basra • By Samuel Gims</p>
-</div>
+<div id="driverTalk" aria-live="polite"></div>
+<div class="controls"><div style="display:flex;align-items:flex-end"><button class="arrow" id="btn-left" aria-label="Tourner à gauche">⬅️</button><div id="steering" role="slider" aria-label="Volant : glisser à gauche ou à droite" tabindex="0"><span></span></div><button id="horn" aria-label="Klaxonner" title="Klaxonner">📣</button></div><div class="mid"><button id="btn-up" aria-label="Accélérer">⬆️</button><button id="btn-down" aria-label="Freiner">⬇️</button></div><button class="arrow" id="btn-right" aria-label="Tourner à droite">➡️</button></div>
+<div id="startScreen"><h2>🚕 TAXI <span>BMD</span></h2><p style="font-size:14px;line-height:1.6">Tu es taximan à <b>Nouakchott</b>.<br>De <b>BMD</b> à <b>BASRA</b>, ramasse les clients 🧍<br>Évite les voitures 🚗 et prends l'essence ⛽.<br><br>Tourne avec le <b>volant</b>, les flèches ou les touches ← →.<br>Appuie sur 📣 pour klaxonner. Le chauffeur parle quand il prend un client !</p><div style="background:#fff;color:#111;padding:6px 12px;border-radius:20px;font-size:13px" id="best">🏆 Record : 0 MRU</div><button class="btn btn-play" id="btn-start">▶️ DÉMARRER LA COURSE</button><p style="font-size:11px">Nouakchott • BMD → Basra • By Samuel Gims</p></div>
 </div>
 <script>
-var canvas=document.getElementById('game');
-var ctx=canvas.getContext('2d');
-var scoreEl=document.getElementById('score'), fuelEl=document.getElementById('fuel'), livesEl=document.getElementById('lives'), distEl=document.getElementById('dist'), startScreen=document.getElementById('startScreen'), bestEl=document.getElementById('best');
-var W=420, H=640;
-var playing=false, score=0, lives=3, fuel=100, dist=0, speed=5, best=Number(localStorage.getItem('TAXI_BMD_BEST')||0);
+var canvas=document.getElementById('game'),ctx=canvas.getContext('2d');
+var scoreEl=document.getElementById('score'),fuelEl=document.getElementById('fuel'),livesEl=document.getElementById('lives'),distEl=document.getElementById('dist'),startScreen=document.getElementById('startScreen'),bestEl=document.getElementById('best'),passengersEl=document.getElementById('passengers'),talkEl=document.getElementById('driverTalk');
+var W=420,H=640,playing=false,score=0,lives=3,fuel=100,dist=0,speed=5,best=Number(localStorage.getItem('TAXI_BMD_BEST')||0),passengerCount=0,roadY=0;
 bestEl.textContent='🏆 Record : '+best+' MRU';
-// 3 voies comme la route de BMD
-var lanes=[70,190,310];
-var taxi={lane:1, x:lanes[1], y:520, w:62, h:96, targetX:lanes[1]};
-var cars=[], clients=[], fuels=[], buildings=[], roadY=0;
-
-function reset(){
-  score=0; lives=3; fuel=100; dist=0; speed=5;
-  taxi.lane=1; taxi.x=lanes[1]; taxi.targetX=lanes[1];
-  cars=[]; clients=[]; fuels=[]; buildings=[];
-  for(var i=0;i<12;i++) buildings.push({x: i%2==0?8:360, y:i*70, h:55, color:['#FFD400','#0088cc','#fff','#ff6b00','#25D366'][i%5]});
-}
-function spawnCar(){
-  var lane=Math.floor(Math.random()*3);
-  // Ne pas spawn sur la même voie que le taxi au même moment pour laisser une chance
-  cars.push({lane:lane, x:lanes[lane], y:-120, w:62, h:96, speed: 3+Math.random()*2, color:['#e74c3c','#fff','#9b59b6','#111'][Math.floor(Math.random()*4)]});
-}
-function spawnClient(){
-  var lane=Math.floor(Math.random()*3);
-  clients.push({lane:lane, x:lanes[lane], y:-60, taken:false});
-}
-function spawnFuel(){
-  var lane=Math.floor(Math.random()*3);
-  fuels.push({lane:lane, x:lanes[lane], y:-60});
-}
-function drawTaxi(){
-  ctx.fillStyle='#FFD400'; ctx.fillRect(taxi.x-31, taxi.y-48, 62, 96);
-  ctx.fillStyle='#111'; ctx.fillRect(taxi.x-31, taxi.y-20, 62, 18);
-  ctx.fillStyle='#fff'; ctx.fillRect(taxi.x-22, taxi.y-38, 44, 22);
-  ctx.fillStyle='#111'; ctx.font='bold 13px Arial'; ctx.fillText('TAXI', taxi.x-18, taxi.y+4);
-  ctx.fillStyle='#111'; ctx.font='bold 10px Arial'; ctx.fillText('BMD', taxi.x-12, taxi.y+38);
-  // Phares
-  ctx.fillStyle='#ffff99'; ctx.fillRect(taxi.x-26, taxi.y-48, 12, 6); ctx.fillRect(taxi.x+14, taxi.y-48, 12, 6);
-}
-function drawCar(c){
-  ctx.fillStyle=c.color; ctx.fillRect(c.x-31, c.y-48, 62, 96);
-  ctx.fillStyle='#222'; ctx.fillRect(c.x-22, c.y-20, 44, 22);
-  ctx.fillStyle='#cceeff'; ctx.fillRect(c.x-22, c.y-38, 44, 22);
-  ctx.fillStyle='red'; ctx.fillRect(c.x-26, c.y+42, 12, 6); ctx.fillRect(c.x+14, c.y+42, 12, 6);
-}
-function gameLoop(){
-  if(!playing) return;
-  // Route
-  ctx.fillStyle='#3a3a3a'; ctx.fillRect(0,0,W,H);
-  // Trottoirs Nouakchott
-  ctx.fillStyle='#c99a5a'; ctx.fillRect(0,0,38,H); ctx.fillRect(382,0,38,H);
-  // Bâtiments qui défilent
-  ctx.fillStyle='#fff'; ctx.font='bold 11px Arial';
-  buildings.forEach(function(b){
-    b.y+=speed; if(b.y>H+60){ b.y=-60; }
-    ctx.fillStyle=b.color; ctx.fillRect(b.x, b.y, 52, 50);
-    ctx.fillStyle='rgba(0,0,0,.6)'; ctx.fillRect(b.x+8, b.y+12, 14, 14); ctx.fillRect(b.x+30, b.y+12, 14, 14);
-  });
-  // Lignes blanches
-  roadY+=speed; if(roadY>40) roadY=0;
-  ctx.fillStyle='#fff';
-  for(var y=-40+roadY; y<H; y+=40){ ctx.fillRect(138, y, 6, 20); ctx.fillRect(276, y, 6, 20); }
-  // Distance BMD -> BASRA
-  dist+=speed*0.6; fuel-=0.04;
-  if(dist>=1000){ winGame(); return; }
-  if(fuel<=0){ fuel=0; gameOver('Plus d\'essence ! Va à la station.'); return; }
-  if(Math.random()<0.02) spawnCar();
-  if(Math.random()<0.012) spawnClient();
-  if(Math.random()<0.006) spawnFuel();
-  // Déplacement taxi fluide
-  taxi.x += (taxi.targetX - taxi.x)*0.2;
-  // Voitures
-  for(var i=cars.length-1;i>=0;i--){
-    var c=cars[i]; c.y+=speed + c.speed;
-    drawCar(c);
-    if(Math.abs(c.y-taxi.y)<80 && Math.abs(c.x-taxi.x)<55){
-      cars.splice(i,1); lives--; livesEl.textContent='❤️'.repeat(lives)+'🖤'.repeat(3-lives);
-      if(navigator.vibrate) navigator.vibrate(300);
-      if(lives<=0){ gameOver('Accident ! Ta voiture est cassée.'); return; }
-      continue;
-    }
-    if(c.y>H+120) cars.splice(i,1);
-  }
-  // Clients
-  for(var j=clients.length-1;j>=0;j--){
-    var cl=clients[j]; cl.y+=speed;
-    ctx.font='32px Arial'; ctx.fillText('🧍', cl.x-16, cl.y+10);
-    ctx.font='bold 10px Arial'; ctx.fillStyle='#FFD400'; ctx.fillText('CLIENT', cl.x-20, cl.y+28);
-    if(Math.abs(cl.y-taxi.y)<70 && Math.abs(cl.x-taxi.x)<45){
-      clients.splice(j,1); score+=150; scoreEl.textContent='💰 '+score+' MRU';
-      if(score>best){ best=score; localStorage.setItem('TAXI_BMD_BEST',best); }
-      continue;
-    }
-    if(cl.y>H+80) clients.splice(j,1);
-  }
-  // Essence
-  for(var k=fuels.length-1;k>=0;k--){
-    var f=fuels[k]; f.y+=speed;
-    ctx.font='30px Arial'; ctx.fillText('⛽', f.x-15, f.y+10);
-    if(Math.abs(f.y-taxi.y)<70 && Math.abs(f.x-taxi.x)<45){ fuels.splice(k,1); fuel=Math.min(100,fuel+35); continue; }
-    if(f.y>H+80) fuels.splice(k,1);
-  }
-  drawTaxi();
-  // Panneau BMD / BASRA
-  ctx.fillStyle='#FFD400'; ctx.fillRect(10, 10, 110, 28);
-  ctx.fillStyle='#111'; ctx.font='bold 13px Arial'; ctx.fillText(dist<500?'📍 BMD':'📍 BASRA →', 16, 28);
-  distEl.textContent=Math.floor(dist)+'m / 1000m';
-  fuelEl.textContent='⛽ '+Math.floor(fuel)+'%';
-  if(fuel<30) fuelEl.style.background='red';
-  else fuelEl.style.background='#fff';
-  requestAnimationFrame(gameLoop);
-}
-function startGame(){ reset(); playing=true; scoreEl.textContent='💰 0 MRU'; livesEl.textContent='❤️❤️❤️'; fuelEl.textContent='⛽ 100%'; startScreen.style.display='none'; requestAnimationFrame(gameLoop); }
-function gameOver(msg){
-  playing=false;
-  startScreen.style.display='flex';
-  startScreen.innerHTML='<h2>💥 GAME OVER</h2><p>'+msg+'<br>Tu as gagné <b>'+score+' MRU</b><br>Distance : '+Math.floor(dist)+'m<br>Record : '+best+' MRU</p><button class="btn btn-again" onclick="location.reload()">🔁 REJOUER</button><p style="font-size:11px">TAXI BMD - By Samuel Gims</p>';
-}
-function winGame(){
-  playing=false;
-  score+=500;
-  startScreen.style.display='flex';
-  startScreen.innerHTML='<h2>🎉 ARRIVÉ À BASRA !</h2><p>Tu as réussi BMD → BASRA !<br>Bonus +500 MRU<br><b>Total : '+score+' MRU</b><br>Record : '+Math.max(best,score)+' MRU</p><button class="btn btn-again" onclick="location.reload()">🔁 NOUVELLE COURSE</button><p>By Samuel Gims</p>';
-  localStorage.setItem('TAXI_BMD_BEST', Math.max(best,score));
-}
-// Contrôles
-function goLeft(){ if(taxi.lane>0){ taxi.lane--; taxi.targetX=lanes[taxi.lane]; } }
-function goRight(){ if(taxi.lane<2){ taxi.lane++; taxi.targetX=lanes[taxi.lane]; } }
-document.getElementById('btn-left').addEventListener('click',goLeft);
-document.getElementById('btn-right').addEventListener('click',goRight);
-document.getElementById('btn-up').addEventListener('click',function(){ speed=Math.min(11,speed+1.5); });
-document.getElementById('btn-down').addEventListener('click',function(){ speed=Math.max(3,speed-1.5); });
-document.addEventListener('keydown',function(e){
-  if(e.key==='ArrowLeft') goLeft();
-  if(e.key==='ArrowRight') goRight();
-  if(e.key==='ArrowUp') speed=Math.min(11,speed+1.5);
-  if(e.key==='ArrowDown') speed=Math.max(3,speed-1.5);
-});
-var touchX=0;
-canvas.addEventListener('touchstart',function(e){ touchX=e.touches[0].clientX; },{passive:true});
-canvas.addEventListener('touchmove',function(e){
-  if(!playing) return;
-  var dx=e.touches[0].clientX-touchX;
-  if(dx>40){ goRight(); touchX=e.touches[0].clientX; }
-  if(dx<-40){ goLeft(); touchX=e.touches[0].clientX; }
-},{passive:true});
-document.getElementById('btn-start').addEventListener('click',startGame);
+var lanes=[70,190,310],taxi={lane:1,x:lanes[1],y:520,w:62,h:96,targetX:lanes[1]},cars=[],clients=[],fuels=[],buildings=[];
+var speechEnabled=true,talkTimer,steeringPointer=null;
+function reset(){score=0;lives=3;fuel=100;dist=0;speed=5;passengerCount=0;taxi.lane=1;taxi.x=lanes[1];taxi.targetX=lanes[1];cars=[];clients=[];fuels=[];buildings=[];for(var i=0;i<12;i++)buildings.push({x:i%2===0?8:360,y:i*70,color:['#FFD400','#0088cc','#fff','#ff6b00','#25D366'][i%5]});passengersEl.textContent='👥 0';talkEl.style.display='none'}
+function spawnCar(){var lane=Math.floor(Math.random()*3);cars.push({lane:lane,x:lanes[lane],y:-120,speed:3+Math.random()*2,color:['#e74c3c','#fff','#9b59b6','#111'][Math.floor(Math.random()*4)]})}
+function spawnClient(){var lane=Math.floor(Math.random()*3);clients.push({lane:lane,x:lanes[lane],y:-60})}
+function spawnFuel(){var lane=Math.floor(Math.random()*3);fuels.push({lane:lane,x:lanes[lane],y:-60})}
+function drawTaxi(){ctx.fillStyle='#FFD400';ctx.fillRect(taxi.x-31,taxi.y-48,62,96);ctx.fillStyle='#111';ctx.fillRect(taxi.x-31,taxi.y-20,62,18);ctx.fillStyle='#cceeff';ctx.fillRect(taxi.x-22,taxi.y-38,44,22);/* Chauffeur visible au volant */ctx.fillStyle='#f1c27d';ctx.beginPath();ctx.arc(taxi.x,taxi.y-29,7,0,Math.PI*2);ctx.fill();ctx.fillStyle='#222';ctx.fillRect(taxi.x-5,taxi.y-22,10,7);ctx.strokeStyle='#111';ctx.lineWidth=2;ctx.beginPath();ctx.arc(taxi.x+11,taxi.y-7,7,0,Math.PI*2);ctx.stroke();ctx.fillStyle='#111';ctx.font='bold 13px Arial';ctx.fillText('TAXI',taxi.x-18,taxi.y+4);ctx.font='bold 10px Arial';ctx.fillText('BMD',taxi.x-12,taxi.y+38);ctx.fillStyle='#ffff99';ctx.fillRect(taxi.x-26,taxi.y-48,12,6);ctx.fillRect(taxi.x+14,taxi.y-48,12,6)}
+function drawCar(c){ctx.fillStyle=c.color;ctx.fillRect(c.x-31,c.y-48,62,96);ctx.fillStyle='#222';ctx.fillRect(c.x-22,c.y-20,44,22);ctx.fillStyle='#cceeff';ctx.fillRect(c.x-22,c.y-38,44,22);ctx.fillStyle='red';ctx.fillRect(c.x-26,c.y+42,12,6);ctx.fillRect(c.x+14,c.y+42,12,6)}
+function sayDriver(text){talkEl.textContent='🗣️ Chauffeur : « '+text+' »';talkEl.style.display='block';clearTimeout(talkTimer);talkTimer=setTimeout(function(){talkEl.style.display='none'},2800);if(speechEnabled&&'speechSynthesis'in window){window.speechSynthesis.cancel();var utterance=new SpeechSynthesisUtterance(text);utterance.lang='fr-FR';utterance.rate=1;window.speechSynthesis.speak(utterance)}}
+function honk(){if(!playing)return;try{var Audio=window.AudioContext||window.webkitAudioContext;if(Audio){var audio=new Audio(),osc=audio.createOscillator(),gain=audio.createGain();osc.type='square';osc.frequency.setValueAtTime(420,audio.currentTime);osc.frequency.setValueAtTime(330,audio.currentTime+0.12);gain.gain.setValueAtTime(0.18,audio.currentTime);gain.gain.exponentialRampToValueAtTime(0.001,audio.currentTime+0.35);osc.connect(gain);gain.connect(audio.destination);osc.start();osc.stop(audio.currentTime+0.35)}}catch(e){}sayDriver('Attention, je klaxonne !')}
+function gameLoop(){if(!playing)return;ctx.fillStyle='#3a3a3a';ctx.fillRect(0,0,W,H);ctx.fillStyle='#c99a5a';ctx.fillRect(0,0,38,H);ctx.fillRect(382,0,38,H);buildings.forEach(function(b){b.y+=speed;if(b.y>H+60)b.y=-60;ctx.fillStyle=b.color;ctx.fillRect(b.x,b.y,52,50);ctx.fillStyle='rgba(0,0,0,.6)';ctx.fillRect(b.x+8,b.y+12,14,14);ctx.fillRect(b.x+30,b.y+12,14,14)});roadY+=speed;if(roadY>40)roadY=0;ctx.fillStyle='#fff';for(var y=-40+roadY;y<H;y+=40){ctx.fillRect(138,y,6,20);ctx.fillRect(276,y,6,20)}
+ dist+=speed*.6;fuel-=.04;if(dist>=1000){winGame();return}if(fuel<=0){fuel=0;gameOver('Plus d’essence ! Va à la station.');return}if(Math.random()<.02)spawnCar();if(Math.random()<.012)spawnClient();if(Math.random()<.006)spawnFuel();taxi.x+=(taxi.targetX-taxi.x)*.2;
+ for(var i=cars.length-1;i>=0;i--){var c=cars[i];c.y+=speed+c.speed;drawCar(c);if(Math.abs(c.y-taxi.y)<80&&Math.abs(c.x-taxi.x)<55){cars.splice(i,1);lives--;livesEl.textContent='❤️'.repeat(Math.max(0,lives))+'🖤'.repeat(3-Math.max(0,lives));if(navigator.vibrate)navigator.vibrate(300);if(lives<=0){gameOver('Accident ! Ta voiture est cassée.');return}continue}if(c.y>H+120)cars.splice(i,1)}
+ for(var j=clients.length-1;j>=0;j--){var cl=clients[j];cl.y+=speed;ctx.font='32px Arial';ctx.fillText('🧍',cl.x-16,cl.y+10);ctx.font='bold 10px Arial';ctx.fillStyle='#FFD400';ctx.fillText('CLIENT',cl.x-20,cl.y+28);if(Math.abs(cl.y-taxi.y)<70&&Math.abs(cl.x-taxi.x)<45){clients.splice(j,1);score+=150;passengerCount++;scoreEl.textContent='💰 '+score+' MRU';passengersEl.textContent='👥 '+passengerCount;if(score>best){best=score;localStorage.setItem('TAXI_BMD_BEST',best)}sayDriver(['Bienvenue à bord !','Accrochez-vous, on part à Basra !','Merci d’avoir choisi Taxi BMD !','Prochain arrêt : Basra !'][Math.floor(Math.random()*4)]);continue}if(cl.y>H+80)clients.splice(j,1)}
+ for(var k=fuels.length-1;k>=0;k--){var f=fuels[k];f.y+=speed;ctx.font='30px Arial';ctx.fillText('⛽',f.x-15,f.y+10);if(Math.abs(f.y-taxi.y)<70&&Math.abs(f.x-taxi.x)<45){fuels.splice(k,1);fuel=Math.min(100,fuel+35);continue}if(f.y>H+80)fuels.splice(k,1)}
+ drawTaxi();ctx.fillStyle='#FFD400';ctx.fillRect(10,10,110,28);ctx.fillStyle='#111';ctx.font='bold 13px Arial';ctx.fillText(dist<500?'📍 BMD':'📍 BASRA →',16,28);distEl.textContent=Math.floor(dist)+'m / 1000m';fuelEl.textContent='⛽ '+Math.floor(fuel)+'%';fuelEl.style.background=fuel<30?'#ff5555':'#fff';requestAnimationFrame(gameLoop)}
+function startGame(){reset();playing=true;scoreEl.textContent='💰 0 MRU';livesEl.textContent='❤️❤️❤️';fuelEl.textContent='⛽ 100%';startScreen.style.display='none';requestAnimationFrame(gameLoop)}
+function gameOver(msg){playing=false;startScreen.style.display='flex';startScreen.innerHTML='<h2>💥 GAME OVER</h2><p>'+msg+'<br>Clients transportés : <b>'+passengerCount+'</b><br>Tu as gagné <b>'+score+' MRU</b><br>Distance : '+Math.floor(dist)+'m<br>Record : '+best+' MRU</p><button class="btn btn-again" onclick="location.reload()">🔁 REJOUER</button><p style="font-size:11px">TAXI BMD - By Samuel Gims</p>'}
+function winGame(){playing=false;score+=500;startScreen.style.display='flex';startScreen.innerHTML='<h2>🎉 ARRIVÉ À BASRA !</h2><p>Tu as réussi BMD → BASRA !<br>Clients transportés : <b>'+passengerCount+'</b><br>Bonus +500 MRU<br><b>Total : '+score+' MRU</b><br>Record : '+Math.max(best,score)+' MRU</p><button class="btn btn-again" onclick="location.reload()">🔁 NOUVELLE COURSE</button><p>By Samuel Gims</p>';localStorage.setItem('TAXI_BMD_BEST',Math.max(best,score))}
+function goLeft(){if(!playing||taxi.lane<=0)return;taxi.lane--;taxi.targetX=lanes[taxi.lane]}
+function goRight(){if(!playing||taxi.lane>=2)return;taxi.lane++;taxi.targetX=lanes[taxi.lane]}
+document.getElementById('btn-left').addEventListener('click',goLeft);document.getElementById('btn-right').addEventListener('click',goRight);document.getElementById('horn').addEventListener('click',honk);
+document.getElementById('btn-up').addEventListener('click',function(){speed=Math.min(11,speed+1.5)});document.getElementById('btn-down').addEventListener('click',function(){speed=Math.max(3,speed-1.5)});
+document.addEventListener('keydown',function(e){if(e.key==='ArrowLeft')goLeft();if(e.key==='ArrowRight')goRight();if(e.key==='ArrowUp')speed=Math.min(11,speed+1.5);if(e.key==='ArrowDown')speed=Math.max(3,speed-1.5);if(e.key===' '){e.preventDefault();honk()}});
+var steering=document.getElementById('steering');steering.addEventListener('pointerdown',function(e){steeringPointer=e.clientX;steering.setPointerCapture(e.pointerId)});steering.addEventListener('pointermove',function(e){if(steeringPointer===null||!playing)return;var dx=e.clientX-steeringPointer;if(dx>14){goRight();steeringPointer=e.clientX}else if(dx< -14){goLeft();steeringPointer=e.clientX}});function stopSteering(){steeringPointer=null}steering.addEventListener('pointerup',stopSteering);steering.addEventListener('pointercancel',stopSteering);steering.addEventListener('keydown',function(e){if(e.key==='ArrowLeft')goLeft();if(e.key==='ArrowRight')goRight()});
+var touchX=0;canvas.addEventListener('touchstart',function(e){touchX=e.touches[0].clientX},{passive:true});canvas.addEventListener('touchmove',function(e){if(!playing)return;var dx=e.touches[0].clientX-touchX;if(dx>40){goRight();touchX=e.touches[0].clientX}if(dx< -40){goLeft();touchX=e.touches[0].clientX}},{passive:true});document.getElementById('btn-start').addEventListener('click',startGame);
 </script>
 </body>
 </html>
